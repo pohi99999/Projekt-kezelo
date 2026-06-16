@@ -1,0 +1,6 @@
+{
+  "name": "Project Planner",
+  "description": "A dark-themed, card-based project and task management dashboard providing daily and weekly views.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
