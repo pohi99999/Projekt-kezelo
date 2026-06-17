@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { X, FolderPlus } from 'lucide-react';
 import { motion } from 'motion/react';
 

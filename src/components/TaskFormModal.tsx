@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { X, CalendarPlus, Clock } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Project } from '../types';
 
 interface TaskFormModalProps {
   projects: Project[];
-  onAddTask: (task: { projectId: string; title: string; dueDate: Date }) => Promise<void>;
+  onAddTask: (task: { projectId: string; title: string; dueDate: Date; priority: 'alacsony' | 'közepes' | 'magas' }) => Promise<void>;
   onClose: () => void;
   defaultDate?: Date;
 }
@@ -18,6 +18,7 @@ export default function TaskFormModal({
 }: TaskFormModalProps) {
   const [title, setTitle] = useState('');
   const [projectId, setProjectId] = useState(projects[0]?.id || '');
+  const [priority, setPriority] = useState<'alacsony' | 'közepes' | 'magas'>('közepes');
   
   // Date configuration
   const [dateType, setDateType] = useState<'today' | 'tomorrow' | 'nextWeek' | 'custom'>('tomorrow');
@@ -62,6 +63,7 @@ export default function TaskFormModal({
         projectId,
         title,
         dueDate: finalDate,
+        priority,
       });
       onClose();
     } catch (err) {
@@ -140,6 +142,22 @@ export default function TaskFormModal({
                     {p.name}
                   </option>
                 ))}
+              </select>
+            </div>
+
+            {/* Priority Picker */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                Prioritás
+              </label>
+              <select
+                value={priority}
+                onChange={(e) => setPriority(e.target.value as 'alacsony' | 'közepes' | 'magas')}
+                className="w-full bg-gray-950 border border-gray-800 focus:border-emerald-500 rounded-xl px-4 py-3 text-sm text-slate-200 outline-none transition-colors"
+              >
+                <option value="alacsony">Alacsony</option>
+                <option value="közepes">Közepes</option>
+                <option value="magas">Magas</option>
               </select>
             </div>
 

@@ -11,6 +11,7 @@ export interface Task {
   title: string;
   dueDate: Date;
   completed: boolean;
+  priority: 'alacsony' | 'közepes' | 'magas';
   createdAt?: any;
 }
 

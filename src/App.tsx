@@ -82,6 +82,7 @@ export default function App() {
             projectId: data.projectId,
             title: data.title,
             completed: !!data.completed,
+            priority: data.priority || 'közepes',
             dueDate: parsedDate,
             createdAt: data.createdAt
           };
@@ -109,11 +110,12 @@ export default function App() {
     setProjects(prev => [...prev, { id: docRef.id, ...newProj }]);
   };
 
-  const handleAddTask = async (taskInput: { projectId: string; title: string; dueDate: Date }) => {
+  const handleAddTask = async (taskInput: { projectId: string; title: string; dueDate: Date; priority: 'alacsony' | 'közepes' | 'magas' }) => {
     const newTask = {
       projectId: taskInput.projectId,
       title: taskInput.title,
       dueDate: taskInput.dueDate,
+      priority: taskInput.priority,
       completed: false,
       createdAt: new Date()
     };
@@ -302,6 +304,18 @@ export default function App() {
                                   {task.title}
                                 </p>
                                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500 mt-1.5">
+                                  <span className={`flex items-center gap-1 font-semibold ${
+                                    task.priority === 'magas' ? 'text-red-400' :
+                                    task.priority === 'közepes' ? 'text-amber-400' :
+                                    'text-blue-400'
+                                  }`}>
+                                    <span className={`w-1.5 h-1.5 rounded-full ${
+                                        task.priority === 'magas' ? 'bg-red-400' :
+                                        task.priority === 'közepes' ? 'bg-amber-400' :
+                                        'bg-blue-400'
+                                    }`}></span>
+                                    {task.priority === 'magas' ? 'Magas' : task.priority === 'közepes' ? 'Közepes' : 'Alacsony'}
+                                  </span>
                                   {project && (
                                     <span className="flex items-center gap-1 text-emerald-500 font-medium">
                                       <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
