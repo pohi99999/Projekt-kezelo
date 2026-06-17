@@ -36,7 +36,23 @@ export default function App() {
 
   // Initial Fetch & Seed Fallback
   useEffect(() => {
+    const loadFromLocalStorage = <T,>(key: string): T | null => {
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : null;
+    };
+
+    const parseTasks = (tasks: any[]): Task[] => {
+      return tasks.map(t => ({ ...t, dueDate: new Date(t.dueDate) }));
+    };
+
     const loadData = async () => {
+      // 1. Try loading from localStorage first
+      const cachedProjects = loadFromLocalStorage<Project[]>('projects');
+      const cachedTasks = loadFromLocalStorage<Task[]>('tasks');
+
+      if (cachedProjects) setProjects(cachedProjects);
+      if (cachedTasks) setTasks(parseTasks(cachedTasks));
+
       try {
         // Fetch Projects
         const projectsSnapshot = await getDocs(collection(db, 'projects'));
@@ -63,6 +79,7 @@ export default function App() {
           projectsData = seededProjects;
         }
         setProjects(projectsData);
+        localStorage.setItem('projects', JSON.stringify(projectsData));
 
         // Fetch Tasks
         const tasksSnapshot = await getDocs(collection(db, 'tasks'));
@@ -89,6 +106,7 @@ export default function App() {
         }) as Task[];
         
         setTasks(tasksData);
+        localStorage.setItem('tasks', JSON.stringify(tasksData));
       } catch (err) {
         console.error("Hiba az adatok letöltésekor:", err);
       } finally {
@@ -107,7 +125,9 @@ export default function App() {
       createdAt: new Date()
     };
     const docRef = await addDoc(collection(db, 'projects'), newProj);
-    setProjects(prev => [...prev, { id: docRef.id, ...newProj }]);
+    const updatedProjects = [...projects, { id: docRef.id, ...newProj }];
+    setProjects(updatedProjects);
+    localStorage.setItem('projects', JSON.stringify(updatedProjects));
   };
 
   const handleAddTask = async (taskInput: { projectId: string; title: string; dueDate: Date; priority: 'alacsony' | 'közepes' | 'magas' }) => {
@@ -121,7 +141,9 @@ export default function App() {
     };
     
     const docRef = await addDoc(collection(db, 'tasks'), newTask);
-    setTasks(prev => [...prev, { id: docRef.id, ...newTask }]);
+    const updatedTasks = [...tasks, { id: docRef.id, ...newTask }];
+    setTasks(updatedTasks);
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
   };
 
   const handleToggleTask = async (taskId: string) => {
@@ -132,13 +154,17 @@ export default function App() {
       completed: !task.completed
     });
 
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, completed: !t.completed } : t));
+    const updatedTasks = tasks.map(t => t.id === taskId ? { ...t, completed: !t.completed } : t);
+    setTasks(updatedTasks);
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
   };
 
   const handleDeleteTask = async (taskId: string) => {
     try {
       await deleteDoc(doc(db, 'tasks', taskId));
-      setTasks(prev => prev.filter(t => t.id !== taskId));
+      const updatedTasks = tasks.filter(t => t.id !== taskId);
+      setTasks(updatedTasks);
+      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
     } catch (e) {
       console.error(e);
     }

@@ -4,5 +4,8 @@ service cloud.firestore {
     match /tasks/{task} {
       allow read, write: if true;
     }
+    match /projects/{project} {
+      allow read, write: if true;
+    }
   }
 }
