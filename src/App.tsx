@@ -247,17 +247,6 @@ export default function App() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start flex-1">
             {/* LEFT / CENTER COLUMN: Calendar & Task Lists */}
             <div className="lg:col-span-2 space-y-6">
-              
-              {/* Calendar list row */}
-              <CalendarView
-                tasks={tasks}
-                selectedDate={selectedDate}
-                onSelectDate={(d) => {
-                  setSelectedDate(d);
-                  setView('daily'); // Autofocus to daily view when clicking an individual day
-                }}
-                view={view}
-              />
 
               {/* Tasks display card */}
               <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-2xl relative">
@@ -373,8 +362,17 @@ export default function App() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: AI Companion widget */}
+            {/* RIGHT COLUMN: Calendar & AI Companion widget */}
             <div className="lg:col-span-1 h-full lg:sticky lg:top-8 gap-6 flex flex-col">
+              <CalendarView
+                tasks={tasks}
+                selectedDate={selectedDate}
+                onSelectDate={(d) => {
+                  setSelectedDate(d);
+                  setView('daily'); // Autofocus to daily view when clicking an individual day
+                }}
+                view={view}
+              />
               <AssistantChat
                 projects={projects}
                 tasks={tasks}
