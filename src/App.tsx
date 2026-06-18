@@ -21,6 +21,7 @@ import AssistantChat from './components/AssistantChat';
 import ProjectFormModal from './components/ProjectFormModal';
 import TaskFormModal from './components/TaskFormModal';
 import DraggableTask from './components/DraggableTask';
+import ProjectStats from './components/ProjectStats';
 import { DndContext, DragEndEvent, closestCorners, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { useDroppable } from '@dnd-kit/core';
 
@@ -415,6 +416,7 @@ export default function App() {
                   }}
                   view={view}
                 />
+                <ProjectStats projects={projects} tasks={tasks} />
                 <AssistantChat
                   projects={projects}
                   tasks={tasks}
